@@ -87,11 +87,11 @@ spec:
           value: "1"
         resources:
           requests:
-            cpu: 300m
-            memory: 256Mi
-          limits:
-            cpu: 500m
+            cpu: 600m
             memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1024Mi
 ---
 apiVersion: v1
 kind: ServiceAccount
