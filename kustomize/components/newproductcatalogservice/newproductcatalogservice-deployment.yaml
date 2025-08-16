@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newproductcatalogservice
+spec:
+  selector:
+    matchLabels:
+      app: newproductcatalogservice
+  template:
+    metadata:
+      labels:
+        app: newproductcatalogservice
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: server
+        image: newproductcatalogservice
+        ports:
+        - containerPort: 3550
+          name: grpc
+        env:
+        - name: PORT
+          value: "3550"
+        - name: DISABLE_TRACING
+          value: "true"
+        - name: DISABLE_PROFILER
+          value: "true"
+        readinessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:3550"]
+        livenessProbe:
+          exec:
+            command: ["/grpc_health_probe", "-addr=:3550", "-timeout=5s"]
+        resources:
+          requests:
+            cpu: 100m
+            memory: 64Mi
+          limits:
+            cpu: 300m
+            memory: 128Mi
+      serviceAccountName: default

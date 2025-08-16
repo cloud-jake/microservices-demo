@@ -27,6 +27,8 @@ build:
     context: src/emailservice
   - image: productcatalogservice
     context: src/productcatalogservice
+  - image: newproductcatalogservice
+    context: src/newproductcatalogservice
   - image: recommendationservice
     context: src/recommendationservice
   - image: shoppingassistantservice
