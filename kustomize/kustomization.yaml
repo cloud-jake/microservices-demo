@@ -32,5 +32,5 @@ components:
 # - components/container-images-tag
 # - components/container-images-tag-suffix
 # - components/container-images-registry
-- components/use-new-product-catalog
-# - components/newproductcatalogservice
+- components/newproductcatalogservice
+# - components/point-to-new-product-catalog

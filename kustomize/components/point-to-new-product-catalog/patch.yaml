@@ -1,0 +1,41 @@
+# Patch for frontend
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        env:
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "newproductcatalogservice:3550"
+---
+# Patch for checkoutservice
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkoutservice
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        env:
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "newproductcatalogservice:3550"
+---
+# Patch for recommendationservice
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendationservice
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        env:
+        - name: PRODUCT_CATALOG_SERVICE_ADDR
+          value: "newproductcatalogservice:3550"
