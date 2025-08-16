@@ -34,6 +34,9 @@ Leave this terminal window running. All `grpcurl` commands should be run from a 
 
 The following commands demonstrate how to call each method of the `ProductCatalogService`. The `-plaintext` flag is used because the services do not use TLS encryption within the cluster.
 
+**Note:** These commands rely on the gRPC reflection API, which must be enabled on the server. If it is not enabled, you will see an error like `server does not support the reflection API`.
+
+
 ### ListProducts
 
 This method retrieves all products and takes no parameters.

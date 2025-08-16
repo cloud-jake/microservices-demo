@@ -28,6 +28,7 @@ import (
 	pb "github.com/GoogleCloudPlatform/microservices-demo/src/newproductcatalogservice/genproto"
 	"google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"google.golang.org/grpc/reflection"
 
 	"cloud.google.com/go/profiler"
 	"github.com/pkg/errors"
@@ -142,6 +143,9 @@ func run(port string) string {
 
 	pb.RegisterProductCatalogServiceServer(srv, svc)
 	healthpb.RegisterHealthServer(srv, svc)
+
+	// Enable gRPC reflection for services like grpcurl.
+	reflection.Register(srv)
 	go srv.Serve(listener)
 
 	return listener.Addr().String()
