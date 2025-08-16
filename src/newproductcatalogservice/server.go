@@ -25,7 +25,7 @@ import (
 	"syscall"
 	"time"
 
-	pb "github.com/GoogleCloudPlatform/microservices-demo/src/productcatalogservice/genproto"
+	pb "github.com/GoogleCloudPlatform/microservices-demo/src/newproductcatalogservice/genproto"
 	"google.golang.org/grpc/credentials/insecure"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 
@@ -76,7 +76,7 @@ func main() {
 
 	if os.Getenv("DISABLE_PROFILER") == "" {
 		log.Info("Profiling enabled.")
-		go initProfiling("productcatalogservice", "1.0.0")
+		go initProfiling("newproductcatalogservice", "1.0.0")
 	} else {
 		log.Info("Profiling disabled.")
 	}

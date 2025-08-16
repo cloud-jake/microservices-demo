@@ -19,7 +19,7 @@ import (
 	"os"
 	"testing"
 
-	pb "github.com/GoogleCloudPlatform/microservices-demo/src/productcatalogservice/genproto"
+	pb "github.com/GoogleCloudPlatform/microservices-demo/src/newproductcatalogservice/genproto"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
