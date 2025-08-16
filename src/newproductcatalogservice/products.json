@@ -107,6 +107,20 @@
                 "nanos": 990000000
             },
             "categories": ["kitchen"]
+        },
+        {
+            "id": "GEM42N34",
+            "name": "Gemini Code Assist Mug",
+            "description": "A stylish mug that helps you write better code, faster. The perfect companion for your late-night coding sessions.",
+            "picture": "/static/img/products/mug.jpg",
+            "priceUsd": {
+                "currencyCode": "USD",
+                "units": 15,
+                "nanos": 990000000
+            },
+            "categories": [
+                "accessories"
+            ]
         }
     ]
 }
