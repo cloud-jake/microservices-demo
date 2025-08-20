@@ -23,6 +23,8 @@ cloud.google.com/go/monitoring v1.24.0 h1:csSKiCJ+WVRgNkRzzz3BPoGjFhjPY23ZTcaenT
 cloud.google.com/go/monitoring v1.24.0/go.mod h1:Bd1PRK5bmQBQNnuGwHBfUamAV1ys9049oEPHnn4pcsc=
 cloud.google.com/go/profiler v0.4.2 h1:KojCmZ+bEPIQrd7bo2UFvZ2xUPLHl55KzHl7iaR4V2I=
 cloud.google.com/go/profiler v0.4.2/go.mod h1:7GcWzs9deJHHdJ5J9V1DzKQ9JoIoTGhezwlLbwkOoCs=
+cloud.google.com/go/retail v1.19.2 h1:PT6CUlazIFIOLLJnV+bPBtiSH8iusKZ+FZRzZYFt2vk=
+cloud.google.com/go/retail v1.19.2/go.mod h1:71tRFYAcR4MhrZ1YZzaJxr030LvaZiIcupH7bXfFBcY=
 cloud.google.com/go/secretmanager v1.14.6 h1:/ooktIMSORaWk9gm3vf8+Mg+zSrUplJFKBztP993oL0=
 cloud.google.com/go/secretmanager v1.14.6/go.mod h1:0OWeM3qpJ2n71MGgNfKsgjC/9LfVTcUqXFUlGxo5PzY=
 cloud.google.com/go/storage v1.50.0 h1:3TbVkzTooBvnZsk7WaAQfOsNrdoM8QHusXA1cpk6QJs=

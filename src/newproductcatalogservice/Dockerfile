@@ -19,7 +19,8 @@ ARG TARGETARCH
 WORKDIR /src
 # restore dependencies
 COPY go.mod go.sum ./
-RUN go mod download
+RUN apk add --no-cache git && \
+    go mod download
 COPY . .
 
 # Skaffold passes in debug-oriented compiler flags

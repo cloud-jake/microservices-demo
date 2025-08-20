@@ -24,18 +24,32 @@ import (
 
 	"cloud.google.com/go/alloydbconn"
 	secretmanager "cloud.google.com/go/secretmanager/apiv1"
+	retail "cloud.google.com/go/retail/apiv2"
 	"cloud.google.com/go/secretmanager/apiv1/secretmanagerpb"
 	pb "github.com/GoogleCloudPlatform/microservices-demo/src/newproductcatalogservice/genproto"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"google.golang.org/api/iterator"
+	retailpb "google.golang.org/genproto/googleapis/cloud/retail/v2"
 )
 
 func loadCatalog(catalog *pb.ListProductsResponse) error {
 	catalogMutex.Lock()
 	defer catalogMutex.Unlock()
 
+	// Attempt to load from an external source if configured
 	if os.Getenv("ALLOYDB_CLUSTER_NAME") != "" {
-		return loadCatalogFromAlloyDB(catalog)
+		err := loadCatalogFromAlloyDB(catalog)
+		if err == nil {
+			return nil
+		}
+		log.Warnf("failed to load catalog from AlloyDB: %v. Falling back to local file.", err)
+	} else if os.Getenv("VERTEX_AI_SEARCH_ENABLED") == "true" {
+		err := loadCatalogFromVertex(catalog)
+		if err == nil {
+			return nil
+		}
+		log.Warnf("failed to load catalog from Vertex AI Search: %v. Falling back to local file.", err)
 	}
 
 	return loadCatalogFromLocalFile(catalog)
@@ -157,5 +171,66 @@ func loadCatalogFromAlloyDB(catalog *pb.ListProductsResponse) error {
 	}
 
 	log.Info("successfully parsed product catalog from AlloyDB")
+	return nil
+}
+
+func loadCatalogFromVertex(catalog *pb.ListProductsResponse) error {
+	log.Info("loading catalog from Vertex AI Search...")
+	ctx := context.Background()
+
+	projectID := os.Getenv("PROJECT_ID")
+	location := os.Getenv("LOCATION")
+	apiCatalog := os.Getenv("CATALOG")
+	branch := os.Getenv("BRANCH")
+
+	if projectID == "" || location == "" || apiCatalog == "" || branch == "" {
+		return fmt.Errorf("missing required environment variables for Vertex AI Search integration")
+	}
+
+	c, err := retail.NewProductClient(ctx)
+	if err != nil {
+		return fmt.Errorf("failed to create retail client: %w", err)
+	}
+	defer c.Close()
+
+	parent := fmt.Sprintf("projects/%s/locations/%s/catalogs/%s/branches/%s", projectID, location, apiCatalog, branch)
+
+	req := &retailpb.ListProductsRequest{
+		Parent: parent,
+	}
+	it := c.ListProducts(ctx, req)
+	catalog.Products = catalog.Products[:0]
+
+	for {
+		resp, err := it.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return fmt.Errorf("failed to list products: %w", err)
+		}
+
+		// Map the Vertex AI Product to our internal Product protobuf
+		product := &pb.Product{
+			Id:          resp.Id,
+			Name:        resp.Title,
+			Description: resp.Description,
+			Categories:  resp.Categories,
+		}
+
+		if len(resp.Images) > 0 {
+			product.Picture = resp.Images[0].Uri
+		}
+
+		if resp.PriceInfo != nil {
+			product.PriceUsd = &pb.Money{
+				CurrencyCode: resp.PriceInfo.CurrencyCode,
+				Units:        int64(resp.PriceInfo.Price),
+			}
+		}
+		catalog.Products = append(catalog.Products, product)
+	}
+
+	log.Infof("successfully loaded %d products from Vertex AI Search", len(catalog.Products))
 	return nil
 }
